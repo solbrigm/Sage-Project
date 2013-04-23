@@ -3,36 +3,30 @@ Sage-Project
 
 Project to test github and sage
 
-function cut_square takes as arguments slope (number >= 0), area (0< number <1), and color. Returns a polygon with 
-of the given color that would result from cutting a 1x1 square by a line with given slope such that the part 
+contains two functions, cut_square_python and cut_square_cython. The first uses only Python code, the second uses Cython.
+
+Both takes as arguments slope (number >= 0) and an area (0< number <1). Returns an array of corners
+for the polygot that would result from cutting a 1x1 square by a line with given slope such that the part 
 remaining in upper left corner has the given area. 
 
-Exapmle 1
 
-sage: cut_square(1,1/2)
 
-#returns purple triangle, vertices [(0,1),(1,1),(0,0)]
-
-Example 2:
+# Example:
 
 sage: slope = 2
 sage: n = 15
 sage: G = Graphics()
 sage: for i in range(0,n):
-sage:     G += cut_square(slope,1-i/n, Color((0,1-i/n,0)))
+sage:     G += polygon(cut_square_python(slope,1-i/n),color = Color((0,1-i/n,0)))
 sage:     
-sage: G
+sage: show(G, figsize= [3,3])
 
-#divides a square into 15 equal sized portions, with different colors of green
+# Timeit Examples:
 
-Example 3:
+timeit("cut_square_cython(2,.1)")     625 loops, best of 3: 4.49 µs per loop
 
-@interact
-def _(slope=(0.5..10)):
-    n = 15
-    G = Graphics()
-    for i in range(0,n):
-        G += cut_square(slope,1-i/n, Color((0,1-i/n,0)))
-    show(G, figsize= [3,3])
+timeit("cut_square_python(2,.1)")     625 loops, best of 3: 23.5 µs per loop
 
-#Interactive divided square, can change the slope of the divisions
+Improvement: cython takes about 1/5 the time.
+
+(Similar numbers achieved for various values of slope and area)
